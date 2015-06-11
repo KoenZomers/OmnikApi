@@ -13,11 +13,6 @@ namespace KoenZomers.Omnik.Api
         #region Constants
 
         /// <summary>
-        /// The default port number of the Omnik to which a data pull session will be made
-        /// </summary>
-        private const int DefaultOmnikPortNumber = 8899;
-
-        /// <summary>
         /// The default data buffer size to use to retrieve data
         /// </summary>
         private const ushort DefaultDataBufferLength = 1024;
@@ -32,9 +27,14 @@ namespace KoenZomers.Omnik.Api
         public string WifiSerialNumber { get; protected set; }
 
         /// <summary>
-        /// Gets the IP EndPoint of the Omnik from which data will be retrieved
+        /// Gets the IP Address or DNS name of the Omnik from which data will be retrieved
         /// </summary>
-        public IPEndPoint IPEndPoint { get; protected set;}
+        public string OmnikAddress { get; protected set; }
+
+        /// <summary>
+        /// Gets the port number of the Omnik on which data will be retrieved
+        /// </summary>
+        public int OmnikPort { get; protected set; }
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace KoenZomers.Omnik.Api
         /// <summary>
         /// The TcpClient used to connect to the Omnik
         /// </summary>
-        private TcpClient _tcpClient { get; set; }
+        private TcpClient TcpClient { get; set; }
 
         #endregion
 
@@ -64,10 +64,11 @@ namespace KoenZomers.Omnik.Api
         /// <summary>
         /// Signature for the failed pull session
         /// </summary>
-        /// <param name="ipAddress">IP Address of the Omnik</param>
+        /// <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+        /// <paramref name="omnikPort">Port number of the Omnik</paramref>
         /// <param name="serialNumber">Serial number of the Omnik</param>
         /// <param name="reason">Reason why the connection failed</param>
-        public delegate void DataPullSessionFailedHandler(IPAddress ipAddress, string serialNumber, string reason);
+        public delegate void DataPullSessionFailedHandler(string omnikAddress, int omnikPort, string serialNumber, string reason);
 
         /// <summary>
         /// Triggered when the pull session failed
@@ -79,26 +80,18 @@ namespace KoenZomers.Omnik.Api
         #region Constructors
 
         /// <summary>
-        /// Creates a new data pull session to the Omnik with the provided IP address using the default port number and the provided serial number
-        /// </summary>
-        /// <param name="ipAddress">IP Address of the Omnik</param>
-        /// <param name="serialNumber">Serial number of the Omnik</param>
-        public DataPullSession(IPAddress ipAddress, string serialNumber) : this(ipAddress, DefaultOmnikPortNumber, serialNumber)
-        {
-        }
-
-        /// <summary>
         /// Creates a new data pull session to the Omnik with the provided IP address on the provided port number using the provided serial number
         /// </summary>        
-        /// <param name="ipAddress">IP Address of the Omnik</param>
+        /// <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
         /// <param name="portNumber">Port number on the Omnik to connect to</param>
         /// <param name="wifiSerialNumber">Serial number of the Wifi module in the Omnik</param>
-        public DataPullSession(IPAddress ipAddress, int portNumber, string wifiSerialNumber)
+        public DataPullSession(string omnikAddress, int portNumber, string wifiSerialNumber)
         {
             WifiSerialNumber = wifiSerialNumber;
-            IPEndPoint = new IPEndPoint(ipAddress, portNumber);
+            OmnikAddress = omnikAddress;
+            OmnikPort = portNumber;
 
-            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("New data pull session to {0} with wifi serialnumber {1} has been initialized", IPEndPoint, WifiSerialNumber));
+            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("New data pull session to {0}:{1} with wifi serialnumber {2} has been initialized", OmnikAddress, OmnikPort, WifiSerialNumber));
         }
 
         #endregion
@@ -110,11 +103,11 @@ namespace KoenZomers.Omnik.Api
         /// </summary>
         public void RetrieveData()
         {
-            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Connecting to Omnik at {0} with serialnumber {1} to pull data", IPEndPoint, WifiSerialNumber));
+            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Connecting to Omnik at {0}:{1} with serialnumber {2} to pull data", OmnikAddress, OmnikPort, WifiSerialNumber));
 
             // Initiate the connection to the Omnik asynchronously
-            _tcpClient = new TcpClient(AddressFamily.InterNetwork);
-            _tcpClient.BeginConnect(IPEndPoint.Address, IPEndPoint.Port, HandlePullClientConnected, _tcpClient);
+            TcpClient = new TcpClient(AddressFamily.InterNetwork);
+            TcpClient.BeginConnect(OmnikAddress, OmnikPort, HandlePullClientConnected, TcpClient);
         }
 
         #endregion
@@ -130,12 +123,12 @@ namespace KoenZomers.Omnik.Api
             
             if (!tcpClient.Connected)
             {
-                var errorMessage = string.Format("Unable to connect to Omnik at {0} with serialnumber {1} to pull data", IPEndPoint, WifiSerialNumber);
+                var errorMessage = string.Format("Unable to connect to Omnik at {0}:{1} with serialnumber {2} to pull data", OmnikAddress, OmnikPort, WifiSerialNumber);
                 Logging.Logdata.LogMessage(TraceLevel.Verbose, errorMessage);
                 
                 if(DataPullSessionFailed != null)
                 {
-                    DataPullSessionFailed(IPEndPoint.Address, WifiSerialNumber, errorMessage);
+                    DataPullSessionFailed(OmnikAddress, OmnikPort, WifiSerialNumber, errorMessage);
                 }
                 return;
             }
@@ -149,11 +142,11 @@ namespace KoenZomers.Omnik.Api
             var dataBuffer = new byte[DefaultDataBufferLength];
             try
             {
-                _tcpClient.GetStream().BeginRead(dataBuffer, 0, dataBuffer.Length, HandleReceivedData, dataBuffer);
+                TcpClient.GetStream().BeginRead(dataBuffer, 0, dataBuffer.Length, HandleReceivedData, dataBuffer);
             }
             catch (Exception exception)
             {
-                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format("Error while waiting for reply from Omnik at {0} with serialnumber {1} in response to the initial statistics request. Exception: {2}. StackTrace: {3}.", IPEndPoint, WifiSerialNumber, exception.Message, exception.StackTrace));
+                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format("Error while waiting for reply from Omnik at {0}:{1} with serialnumber {2} in response to the initial statistics request. Exception: {3}. StackTrace: {4}.", OmnikAddress, OmnikPort, WifiSerialNumber, exception.Message, exception.StackTrace));
             }
             
         }
@@ -166,7 +159,7 @@ namespace KoenZomers.Omnik.Api
         {
             if (!tcpClient.Connected)
             {
-                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format("Can't send to Omnik at {0} with serialnumber {1} because the connection is closed", IPEndPoint, WifiSerialNumber));
+                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format("Can't send to Omnik at {0}:{1} with serialnumber {2} because the connection is closed", OmnikAddress, OmnikPort, WifiSerialNumber));
                 return;
             }
 
@@ -191,7 +184,7 @@ namespace KoenZomers.Omnik.Api
             // Construct the message which requests the statistics
             var requestDataMessage = new byte[] { 0x68, 0x02, 0x40, 0x30, serialBytes[3], serialBytes[2], serialBytes[1], serialBytes[0], serialBytes[3], serialBytes[2], serialBytes[1], serialBytes[0], 0x01, 0x00, checksumBytes[0], 0x16 };
 
-            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Sending Omnik at {0} with serialnumber {1} the request statistics command {2}", IPEndPoint, WifiSerialNumber, BitConverter.ToString(requestDataMessage)));
+            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Sending Omnik at {0}:{1} with serialnumber {2} the request statistics command {3}", OmnikAddress, OmnikPort, WifiSerialNumber, BitConverter.ToString(requestDataMessage)));
 
             // Send the message to the Omnik
             tcpClient.GetStream().Write(requestDataMessage, 0, requestDataMessage.Length);
@@ -206,7 +199,7 @@ namespace KoenZomers.Omnik.Api
             try
             {
                 // Get the networkstream from the TcpClient
-                var stream = _tcpClient.GetStream();
+                var stream = TcpClient.GetStream();
 
                 // Check that the stream is still open to read data from
                 if (!stream.CanRead) return;
@@ -216,7 +209,7 @@ namespace KoenZomers.Omnik.Api
             }
             catch (Exception exception)
             {
-                Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Onmnik at {0} disconnected while delivering data. Exception: {1}. Error message: {2}.", IPEndPoint, exception.Message, exception.StackTrace));
+                Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Onmnik at {0}:{1} disconnected while delivering data. Exception: {2}. Error message: {3}.", OmnikAddress, OmnikPort, exception.Message, exception.StackTrace));
                 return;
             }
             
@@ -237,14 +230,14 @@ namespace KoenZomers.Omnik.Api
             // Check if data has been received or the client has disconnected
             if (receivedDataCountInBytes == 0)
             {
-                Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Onmnik at {0} disconnected after data pull request", IPEndPoint));
+                Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Onmnik at {0}:{1} disconnected after data pull request", OmnikAddress, OmnikPort));
 
-                _tcpClient.Close();
+                TcpClient.Close();
                 return;
             }
 
             var receivedDataHexadecimal = BitConverter.ToString(receivedData);
-            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Data received from Onmnik at {0} after data pull request: '{1}' (length {2})", IPEndPoint, receivedDataHexadecimal, receivedDataHexadecimal.Length));
+            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Data received from Onmnik at {0}:{1} after data pull request: '{2}' (length {3})", OmnikAddress, OmnikPort, receivedDataHexadecimal, receivedDataHexadecimal.Length));
 
             // Check if there are event handlers attached to signal of the data that has been received
             if (DataReceived != null)
@@ -253,7 +246,7 @@ namespace KoenZomers.Omnik.Api
             }
 
             // Reinitialize the client to retrieve new data
-            _tcpClient.GetStream().BeginRead(dataBuffer, 0, dataBuffer.Length, HandleReceivedData, dataBuffer);
+            TcpClient.GetStream().BeginRead(dataBuffer, 0, dataBuffer.Length, HandleReceivedData, dataBuffer);
         }
 
         #endregion

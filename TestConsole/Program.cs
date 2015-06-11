@@ -49,7 +49,7 @@ namespace KoenZomers.Omnik.TestConsole
             _controller.RawPullDataReceived += PullDataReceived;
 
             // Initiate the pull from the Omnik. Provide its IP address here and its Wifi serial number as that is used as a form of authentication to get the data.
-            _controller.PullData(IPAddress.Parse("192.168.54.80"), "604963453");
+            _controller.PullData("solargarden.devices.zomers.local", "604963453");
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace KoenZomers.Omnik.TestConsole
         /// <param name="session">The session instance through which the data has been received</param>
         static void PullDataReceived(byte[] receivedData, DataPullSession session)
         {
-            Console.WriteLine("{0:HH:mm:ss} - Incoming data from pull action to {1}. {2} bytes received.", DateTime.Now, session.IPEndPoint, receivedData.Length);
+            Console.WriteLine("{0:HH:mm:ss} - Incoming data from pull action to {1}:{2}. {3} bytes received.", DateTime.Now, session.OmnikAddress, session.OmnikPort, receivedData.Length);
         }
     }
 }

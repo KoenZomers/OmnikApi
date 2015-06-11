@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
 
 namespace KoenZomers.Omnik.Api
 {
@@ -9,6 +8,15 @@ namespace KoenZomers.Omnik.Api
     /// </summary>
     public class Controller
     {
+        #region Constants
+
+        /// <summary>
+        /// The default port number of the Omnik to which a data pull session will be made
+        /// </summary>
+        private const int DefaultOmnikPortNumber = 8899;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -73,7 +81,7 @@ namespace KoenZomers.Omnik.Api
         /// </summary>
         /// <param name="clientEndPoint">EndPoint of the client that disconnected</param>
         /// <param name="listener">The Listener from which the client has disconnected</param>
-        public delegate void ClientDisconnectedHandler(IPEndPoint clientEndPoint, Listener listener);
+        public delegate void ClientDisconnectedHandler(System.Net.IPEndPoint clientEndPoint, Listener listener);
         /// <summary>
         /// Triggered when a client disconnects
         /// </summary>
@@ -92,10 +100,11 @@ namespace KoenZomers.Omnik.Api
         /// <summary>
         /// Signature for the failed pull session
         /// </summary>
-        /// <param name="ipAddress">IP Address of the Omnik</param>
+        /// <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+        /// <param name="omnikPort">Port number of the Omnik</param>
         /// <param name="serialNumber">Serial number of the Omnik</param>
         /// <param name="reason">Reason why the connection failed</param>
-        public delegate void DataPullSessionFailedHandler(IPAddress ipAddress, string serialNumber, string reason);
+        public delegate void DataPullSessionFailedHandler(string omnikAddress, int omnikPort, string serialNumber, string reason);
 
         /// <summary>
         /// Triggered when the pull session failed
@@ -153,14 +162,15 @@ namespace KoenZomers.Omnik.Api
         }
 
         /// <summary>
-        /// Pulls data in from an Omnik Solar Converter by connecting to it. Subscribe to the DataPullSessionCompleted event to retrieve the statistics once it completes.
+        /// Pulls data in from an Omnik Solar Converter by connecting to it. Subscribe to the OmnikStatisticsAvailable event to retrieve the statistics once it completes.
         /// </summary>
-        /// <param name="omnikIPAddress">IP Address of the Omnik Solar Inverter to connect to</param>
+        /// <param name="omnikAddress">IP Address or DNS name of the Omnik Solar Inverter to connect to</param>
+        /// <param name="omnikPort">Port number of the Omnik Solar Inverter to connect on</param>
         /// <param name="serialNumber">Serial number of the Omnik Solar Inverter to which the connection will be made</param>
-        public void PullData(IPAddress omnikIPAddress, string serialNumber)
+        public void PullData(string omnikAddress, string serialNumber, int omnikPort = DefaultOmnikPortNumber)
         {
             // Create a new data pull session and initiate it
-            var dataPullSession = new DataPullSession(omnikIPAddress, serialNumber);
+            var dataPullSession = new DataPullSession(omnikAddress, omnikPort, serialNumber);
             dataPullSession.DataReceived += HandlePullSessionDataReceived;
             dataPullSession.DataPullSessionFailed += HandleDataPullSessionFailed;
             dataPullSession.RetrieveData();               
@@ -173,14 +183,15 @@ namespace KoenZomers.Omnik.Api
         /// <summary>
         /// Triggered when a data pull session failed
         /// </summary>
-        /// <param name="ipAddress">IP Address of the Omnik</param>
+        /// <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+        /// <param name="omnikPort">Port number of the Omnik</param>
         /// <param name="serialNumber">Serial number of the Omnik</param>
         /// <param name="reason">Reason why the connection failed</param>
-        private void HandleDataPullSessionFailed(IPAddress ipAddress, string serialNumber, string reason)
+        private void HandleDataPullSessionFailed(string omnikAddress, int omnikPort, string serialNumber, string reason)
         {
             if (DataPullSessionFailed != null)
             {
-                DataPullSessionFailed(ipAddress, serialNumber, reason);
+                DataPullSessionFailed(omnikAddress, omnikPort, serialNumber, reason);
             }
         }
 
