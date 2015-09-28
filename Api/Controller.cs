@@ -209,7 +209,7 @@ namespace KoenZomers.Omnik.Api
             }
 
             // Check if there are subscribers to the completed data pull sessions and signal them. Allow for some variations in the received data length due to different firmware versions using different transmission lengths.
-            if (OmnikStatisticsAvailable != null && receivedData.Length >= 130 && receivedData.Length <= 150)
+            if (OmnikStatisticsAvailable != null && receivedData.Length >= 130)
             {
                 // Create the statistics
                 var statistics = new Statistics(receivedData);
