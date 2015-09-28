@@ -1,6 +1,7 @@
 ﻿using System;
 using KoenZomers.Omnik.Api;
 using System.Net;
+using System.Configuration;
 
 namespace KoenZomers.Omnik.TestConsole
 {
@@ -49,7 +50,7 @@ namespace KoenZomers.Omnik.TestConsole
             _controller.RawPullDataReceived += PullDataReceived;
 
             // Initiate the pull from the Omnik. Provide its IP address here and its Wifi serial number as that is used as a form of authentication to get the data.
-            _controller.PullData("solargarden.devices.zomers.local", "604963453");
+            _controller.PullData(ConfigurationManager.AppSettings["OmnikSolarAddress"], ConfigurationManager.AppSettings["OmnikSolarWiFiSerialNumber"], int.Parse(ConfigurationManager.AppSettings["OmnikSolarPort"]));
         }
 
         /// <summary>
