@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmnikApi", "Api\OmnikApi.csproj", "{7F0B4358-C3A3-4D66-B90A-D6950DB8B0BA}"
 EndProject
@@ -10,6 +10,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52BFCEA2-5B16-4F23-9696-373AC0BC5665}"
 	ProjectSection(SolutionItems) = preProject
 		Solution Items\KoenZomers.Omnik.Api.snk = Solution Items\KoenZomers.Omnik.Api.snk
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Downloads", "Downloads", "{4F6DE60E-59C3-48CE-B65E-B87CA9A052C2}"
+	ProjectSection(SolutionItems) = preProject
+		Downloads\KoenZomers.Omnik.TestConsole.zip = Downloads\KoenZomers.Omnik.TestConsole.zip
 	EndProjectSection
 EndProject
 Global
