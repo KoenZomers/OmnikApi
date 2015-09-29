@@ -5,6 +5,14 @@ I have done some research into the protocol used by Omnik and have created an AP
 
 More information and to see it live being used in action against my solar panels, go to https://www.zomers.eu/domotics/solarpanels
 
+## Download
+
+For a directly executable version of this tool, [download it here](https://github.com/KoenZomers/OmnikApi/raw/master/Downloads/KoenZomers.Omnik.TestConsole.zip)
+
+You can edit the values in the appSettings section in the KoenZomers.Omnik.TestConsole.exe.config file to have it connect to your Omnik Solar inverter.
+
+## Feedback
+
 Feel free to use it to suit your needs. If you believe something could be improved or need help, feel free to let me know.
 
 Koen Zomers
