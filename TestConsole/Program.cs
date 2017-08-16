@@ -49,6 +49,9 @@ namespace KoenZomers.Omnik.TestConsole
             // Request a method to be triggered when raw data is received as a response to the pull action. This is interesting for debugging purposes only.
             _controller.RawPullDataReceived += PullDataReceived;
 
+            // Register to the event which will tell us if the pull failed
+            _controller.DataPullSessionFailed += PullDataFailed;
+
             // Initiate the pull from the Omnik. Provide its IP address here and its Wifi serial number as that is used as a form of authentication to get the data.
             _controller.PullData(ConfigurationManager.AppSettings["OmnikSolarAddress"], ConfigurationManager.AppSettings["OmnikSolarWiFiSerialNumber"], int.Parse(ConfigurationManager.AppSettings["OmnikSolarPort"]));
         }
@@ -143,6 +146,14 @@ namespace KoenZomers.Omnik.TestConsole
         static void PullDataReceived(byte[] receivedData, DataPullSession session)
         {
             Console.WriteLine("{0:HH:mm:ss} - Incoming data from pull action to {1}:{2}. {3} bytes received: {4}", DateTime.Now, session.OmnikAddress, session.OmnikPort, receivedData.Length, BitConverter.ToString(receivedData));
+        }
+
+        /// <summary>
+        /// Triggered when a pull operation fails
+        /// </summary>
+        static void PullDataFailed(string omnikAddress, int omnikPort, string serialNumber, string reason)
+        {
+            Console.WriteLine("Failed to pull data from Omnik at {0}:{1} using serialnumber '{2}'. Reason: '{3}'", omnikAddress, omnikPort, serialNumber, reason);
         }
     }
 }
