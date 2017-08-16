@@ -63,9 +63,21 @@ The WiFi Serial Number you can retrieve by keep pushing the white button on the 
 
 ## Version History
 
+1.0.1.0 - August 16, 2017
+
+- Modified the TestConsole code to output to the console the full RAW data received. If the code crashes for you, send me this raw output so I can analyze if i.e. the protocol has changed in your version of the Omnik solar inverter.
+
 1.0.0.1 - August 16, 2017
 
 - The library and TestConsole are now compliled against the Microsoft .NET 4.6.2 framework as the 4.5 framework was no longer supported
+
+## Troubleshooting
+
+In case you can't get the code to work, feel free to reach out. I'll be happy to help if I can.
+
+### Code crashes during execution
+
+- Ensure you've entered the proper values in the App.config. Make sure you use the serial number of the WiFi module in your Omnik. This is NOT the same as the serial number of the Omnik Solar Inverter itself. Keep pressing the white button on your Omnik Solar Inverter until it shows S/N: on the display. This is the number that you'll need to use as the serial number.
 
 ## Feedback
 

@@ -132,7 +132,7 @@ namespace KoenZomers.Omnik.TestConsole
         /// <param name="client">The client session through which the data has been received</param>
         static void PushDataReceived(byte[] receivedData, ConnectedClient client)
         {
-            Console.WriteLine("{0:HH:mm:ss} - Incoming data at listener {1} from {2}. {3} bytes received.", DateTime.Now, client.Listener.Name, client.RemoteClient, receivedData.Length);
+            Console.WriteLine("{0:HH:mm:ss} - Incoming data at listener {1} from {2}. {3} bytes received: {4}", DateTime.Now, client.Listener.Name, client.RemoteClient, receivedData.Length, BitConverter.ToString(receivedData));
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace KoenZomers.Omnik.TestConsole
         /// <param name="session">The session instance through which the data has been received</param>
         static void PullDataReceived(byte[] receivedData, DataPullSession session)
         {
-            Console.WriteLine("{0:HH:mm:ss} - Incoming data from pull action to {1}:{2}. {3} bytes received.", DateTime.Now, session.OmnikAddress, session.OmnikPort, receivedData.Length);
+            Console.WriteLine("{0:HH:mm:ss} - Incoming data from pull action to {1}:{2}. {3} bytes received: {4}", DateTime.Now, session.OmnikAddress, session.OmnikPort, receivedData.Length, BitConverter.ToString(receivedData));
         }
     }
 }
