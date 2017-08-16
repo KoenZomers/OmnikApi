@@ -73,7 +73,7 @@ The WiFi Serial Number you can retrieve by keep pushing the white button on the 
 
 ## Troubleshooting
 
-In case you can't get the code to work, feel free to reach out. I'll be happy to help if I can.
+In case you can't get the code to work, feel free to reach out. I'll be happy to help if I can. If the output does show you the "Incoming data from pull action", send along a copy of the exact output provided there. Some scenarios I hear about more often:
 
 ### Code crashes during execution
 
