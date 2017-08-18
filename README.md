@@ -63,6 +63,10 @@ The WiFi Serial Number you can retrieve by keep pushing the white button on the 
 
 ## Version History
 
+1.0.2.0 - August 18, 2017
+
+- Compiled back against .NET Framework 4.5.2 as that is still in support and I received messages from people still on Windows 7 RTM who could otherwise not use it anymore
+
 1.0.1.0 - August 16, 2017
 
 - Modified the TestConsole code to output to the console the full RAW data received. Also if a pull fails, it will show why it failed. If the code crashes for you, send me this raw output so I can analyze if i.e. the protocol has changed in your version of the Omnik solar inverter.
