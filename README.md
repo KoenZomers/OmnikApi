@@ -1,7 +1,7 @@
 # OmnikApi
 Omnik Solar API in C#
 
-I have done some research into the protocol used by Omnik and have created an API in C# on the Microsoft .NET 4.5.2 framework which can be used to query and parse the statistics from the Omnik device. Thanks to several great resources online and some investigation myself I managed to create the most rich and full open source API yet available on the internet for the Omnik Solar Inverters. Find the source code in this Github repository. The code is overly commented inline and contains a working sample console application, so for someone with some Microsoft .NET development skills it should be very easy to understand and implement in your own software. It supports both pulling data out an Omnik (actively connecting to it and requesting its statistics) as well as having the Omnik push data to us at an approximate 5 minute interval.
+I have done some research into the protocol used by Omnik and have created an API in C# on the Microsoft .NET 4.5.2 & 4.7.2 Frameworks which can be used to query and parse the statistics from the Omnik device. Thanks to several great resources online and some investigation myself I managed to create the most rich and full open source API yet available on the internet for the Omnik Solar Inverters. Find the source code in this Github repository. The code is overly commented inline and contains a working sample console application, so for someone with some Microsoft .NET development skills it should be very easy to understand and implement in your own software. It supports both pulling data out an Omnik (actively connecting to it and requesting its statistics) as well as having the Omnik push data to us at an approximate 5 minute interval.
 
 More information and to see it live being used in action against my solar panels, go to https://www.zomers.eu/domotics/solarpanels
 
@@ -62,6 +62,10 @@ controller.PullData("ip address or dns name of your Omnik Solar Inverter", "Omni
 The WiFi Serial Number you can retrieve by keep pushing the white button on the front of the Omnik Solar inverter until the display reads S/N: \<number>. This is the number you'll use for "Omnik WiFi Serial Number".
 
 ## Version History
+
+Version 1.0.3.0 - May 6, 2019
+
+- Converted to a multi targeted framework making it available to .NET Framework 4.5.2 and .NET Framework 4.7.2
 
 1.0.2.0 - August 18, 2017
 

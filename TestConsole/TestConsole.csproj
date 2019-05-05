@@ -59,9 +59,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Api\OmnikApi.csproj">
-      <Project>{7f0b4358-c3a3-4d66-b90a-d6950db8b0ba}</Project>
-      <Name>OmnikApi</Name>
+    <ProjectReference Include="..\StandardApi\StandardApi.csproj">
+      <Project>{1112105c-9d9f-4fdc-a457-42086c6e80a5}</Project>
+      <Name>StandardApi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

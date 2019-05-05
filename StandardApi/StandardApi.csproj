@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net452;net472</TargetFrameworks>
+    <AssemblyName>KoenZomers.Omnik.Api</AssemblyName>
+    <RootNamespace>KoenZomers.Omnik.Api</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>KoenZomers.Omnik.Api</PackageId>
+    <Version>1.0.3.0</Version>
+    <Authors>Koen Zomers</Authors>
+    <Company>Koen Zomers</Company>
+    <Product>Omnik Solar API</Product>
+    <Description>Contains a Omnik Solar Inverter API that can be used to query information from an Omnik Solar Inverter</Description>
+    <Copyright>Koen Zomers</Copyright>
+    <PackageProjectUrl>https://github.com/KoenZomers/OmnikApi</PackageProjectUrl>
+    <PackageReleaseNotes>- Converted to a multi targeted framework making it available to .NET Framework 4.5.2 and .NET Framework 4.7.2</PackageReleaseNotes>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Solution Items\KoenZomers.Omnik.Api.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>KoenZomers.Omnik.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Newtonsoft.Json" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,926 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>KoenZomers.Omnik.Api</name>
+    </assembly>
+    <members>
+        <member name="T:KoenZomers.Omnik.Api.Configuration.ListenerConfigurationElement">
+            <summary>
+            Omnik Listener definition
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Configuration.ListenerConfigurationElement.Name">
+            <summary>
+            Name to assign to this listener
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Configuration.ListenerConfigurationElement.Port">
+            <summary>
+            Port number on which should be listened for Omnik data transmissions
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Configuration.ListenerConfigurationElementCollection">
+            <summary>
+            Configuration section for the Listeners
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Configuration.LoggingConfigurationElement">
+            <summary>
+            Omnik Logging configuration element
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Configuration.LoggingConfigurationElement.Level">
+            <summary>
+            Log level
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Configuration.OmnikConfiguration">
+            <summary>
+            Static class which provides access to the Omnik Configuration items in the application configuration file
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Configuration.OmnikConfiguration.Instance">
+            <summary>
+            Gets an instance to the Omnik configuration items in the application configuration file
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Configuration.OmnikConfiguration.RefreshConfiguration">
+            <summary>
+            Refreshes the configuration from the application configuration file
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Configuration.OmnikConfigurationSection">
+            <summary>
+            Configuration section definition for Omnik
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Configuration.OmnikConfigurationSection.ConfigurationSectionName">
+            <summary>
+            Defines the name of the configuration element used for this section in the app.config file
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Configuration.OmnikConfigurationSection.Logging">
+            <summary>
+            The logging configuration parameters
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.ConnectedClient">
+            <summary>
+            One connected client to a listener
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.ConnectedClient.DefaultDataBufferLength">
+            <summary>
+            The default data buffer size to use to retrieve data
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.ConnectedClient.RemoteClient">
+            <summary>
+            Gets the IPEndPoint of the client that is connected or NULL if no client is connected
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.ConnectedClient.Listener">
+            <summary>
+            Gets the listener that accepted this client
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.ConnectedClient.DataReceivedHandler">
+            <summary>
+            Signature for the received data
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="client">The client instance on which the data has been received</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.ConnectedClient.DataReceived">
+            <summary>
+            Triggered when data is received from the client
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.ConnectedClient.ClientDisconnectedHandler">
+            <summary>
+            Signature for a disconnecting client 
+            </summary>
+            <param name="client">Client instance that has disconnected</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.ConnectedClient.ClientDisconnected">
+            <summary>
+            Triggered when the remote client connected to this instance disconnects
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.ConnectedClient._tcpClient">
+            <summary>
+            The client that this handler represents
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.ConnectedClient.#ctor(System.Net.Sockets.TcpClient,KoenZomers.Omnik.Api.Listener)">
+            <summary>
+            Set up a new TcpClientHandler instance originating from a new client connecting to the service
+            </summary>
+            <param name="client">TcpClient of the new incoming client connection</param>
+            <param name="listener">The Listener on which the client has connected</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.ConnectedClient.HandleReceivedData(System.IAsyncResult)">
+            <summary>
+            Handles data received from the connected client
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.ConnectedClient.Disconnect">
+            <summary>
+            Disconnects the client
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.ConnectedClient.Dispose">
+            <summary>
+            Clean up this client instance
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller">
+            <summary>
+            Controls the communication to and from the Omnik Solar Inverters
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Controller.DefaultOmnikPortNumber">
+            <summary>
+            The default port number of the Omnik to which a data pull session will be made
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Controller.Listeners">
+            <summary>
+            List with all listening listeners
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.ListeningHandler">
+            <summary>
+            Signature for listener ready
+            </summary>
+            <param name="listener">Listener instance that is ready and listening for incoming data</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.Listening">
+            <summary>
+            Triggered when a listener is ready and listening
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.RawPushDataReceivedHandler">
+            <summary>
+            Signature for the received data pushed towards us from an Omin
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="client">The client instance on which the data has been received</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.RawPushDataReceived">
+            <summary>
+            Triggered when data is received from an Omnik pushing the data to us
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.RawPullDataReceivedHandler">
+            <summary>
+            Signature for the received data pulled from an Omnik
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="session">The session which has pulled the data from the Omnik</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.RawPullDataReceived">
+            <summary>
+            Triggered when data is received from an Omnik by pulling it from the Omnik
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.ClientConnectedHandler">
+            <summary>
+            Signature for a connecting client
+            </summary>
+            <param name="client">Client instance representing the client that connects</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.ClientConnected">
+            <summary>
+            Triggered when a client connects
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.ClientDisconnectedHandler">
+            <summary>
+            Signature for a disconnecting client
+            </summary>
+            <param name="clientEndPoint">EndPoint of the client that disconnected</param>
+            <param name="listener">The Listener from which the client has disconnected</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.ClientDisconnected">
+            <summary>
+            Triggered when a client disconnects
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.OmnikStatisticsAvailableHandler">
+            <summary>
+            Signature for when Omnik statistics are available
+            </summary>
+            <param name="statistics">The statistics parsed from the Omnik data</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.OmnikStatisticsAvailable">
+            <summary>
+            Triggered when either a datapull completes or the Omnik has sent data to us
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Controller.DataPullSessionFailedHandler">
+            <summary>
+            Signature for the failed pull session
+            </summary>
+            <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+            <param name="omnikPort">Port number of the Omnik</param>
+            <param name="serialNumber">Serial number of the Omnik</param>
+            <param name="reason">Reason why the connection failed</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Controller.DataPullSessionFailed">
+            <summary>
+            Triggered when the pull session failed
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.StartListeners">
+            <summary>
+            Starts all listeners configured in the application configuration file
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.StopListeners">
+            <summary>
+            Stops all currently listening listeners
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.PullData(System.String,System.String,System.Int32)">
+            <summary>
+            Pulls data in from an Omnik Solar Converter by connecting to it. Subscribe to the OmnikStatisticsAvailable event to retrieve the statistics once it completes.
+            </summary>
+            <param name="omnikAddress">IP Address or DNS name of the Omnik Solar Inverter to connect to</param>
+            <param name="omnikPort">Port number of the Omnik Solar Inverter to connect on</param>
+            <param name="serialNumber">Serial number of the Omnik Solar Inverter to which the connection will be made</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.HandleDataPullSessionFailed(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Triggered when a data pull session failed
+            </summary>
+            <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+            <param name="omnikPort">Port number of the Omnik</param>
+            <param name="serialNumber">Serial number of the Omnik</param>
+            <param name="reason">Reason why the connection failed</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.HandlePullSessionDataReceived(System.Byte[],KoenZomers.Omnik.Api.DataPullSession)">
+            <summary>
+            Triggered when data is received based on a pull request
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="session">The data pull session through which data has been received</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.HandlePushSessionDataReceived(System.Byte[],KoenZomers.Omnik.Api.ConnectedClient)">
+            <summary>
+            Triggered when data is received from a client by having the Omnik push it to us
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="client">The client instance on which the data has been received</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.HandleClientDisconnected(System.Net.IPEndPoint,KoenZomers.Omnik.Api.Listener)">
+            <summary>
+            Triggered when a client disconnects
+            </summary>
+            <param name="clientEndPoint">EndPoint of the client that disconnected</param>
+            <param name="listener">The Listener from which the client has disconnected</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.HandleClientConnected(KoenZomers.Omnik.Api.ConnectedClient)">
+            <summary>
+            Triggered when a client connects
+            </summary>
+            <param name="client">Client instance representing the client that connects</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Controller.HandleListening(KoenZomers.Omnik.Api.Listener)">
+            <summary>
+            Triggered when a listener is ready and listening
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="receivedDataAsText">Received data converted to hexadecimals</param>
+            <param name="client">The client instance on which the data has been received</param>/// 
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.DataPullSession">
+            <summary>
+            Contains the logic for pulling statistics out of the Omnik Solar Inverter
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.DataPullSession.DefaultDataBufferLength">
+            <summary>
+            The default data buffer size to use to retrieve data
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.DataPullSession.WifiSerialNumber">
+            <summary>
+            Gets the Wifi serialnumber used in this datapull session
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.DataPullSession.OmnikAddress">
+            <summary>
+            Gets the IP Address or DNS name of the Omnik from which data will be retrieved
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.DataPullSession.OmnikPort">
+            <summary>
+            Gets the port number of the Omnik on which data will be retrieved
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.DataPullSession.TcpClient">
+            <summary>
+            The TcpClient used to connect to the Omnik
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.DataPullSession.DataReceivedHandler">
+            <summary>
+            Signature for the received data
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="dataPullSession">The data pull session through which data has been received</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.DataPullSession.DataReceived">
+            <summary>
+            Triggered when data is received from the Omnik
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.DataPullSession.DataPullSessionFailedHandler">
+            <summary>
+            Signature for the failed pull session
+            </summary>
+            <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+            <paramref name="omnikPort">Port number of the Omnik</paramref>
+            <param name="serialNumber">Serial number of the Omnik</param>
+            <param name="reason">Reason why the connection failed</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.DataPullSession.DataPullSessionFailed">
+            <summary>
+            Triggered when the pull session failed
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.DataPullSession.#ctor(System.String,System.Int32,System.String)">
+            <summary>
+            Creates a new data pull session to the Omnik with the provided IP address on the provided port number using the provided serial number
+            </summary>        
+            <param name="omnikAddress">IP Address or DNS name of the Omnik</param>
+            <param name="portNumber">Port number on the Omnik to connect to</param>
+            <param name="wifiSerialNumber">Serial number of the Wifi module in the Omnik</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.DataPullSession.RetrieveData">
+            <summary>
+            Retrieve data from the Omnik
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.DataPullSession.HandlePullClientConnected(System.IAsyncResult)">
+            <summary>
+            Handles a pull client being connected to an Omnik
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.DataPullSession.SendDataPullMessage(System.Net.Sockets.TcpClient)">
+            <summary>
+            Constructs the message to send to the Omnik to request data and sends it
+            </summary>
+            <param name="tcpClient">TcpClient to use to transmit the message</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.DataPullSession.HandleReceivedData(System.IAsyncResult)">
+            <summary>
+            Handles data received from the connected session
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Exceptions.ConfigurationException">
+            <summary>
+            Exception thrown when there are problems with the Omnik configuration element in the application configuration file
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Exceptions.DataPullFailedException">
+            <summary>
+            Exception thrown when a data pull operation fails
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Exceptions.DataPullFailedException.IPEndPoint">
+            <summary>
+            The IP EndPoint to which a connection attempt was made
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Exceptions.DataPullFailedException.#ctor">
+            <summary>
+            Default constructor because its required for serialization support. Do not use.
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Exceptions.DataPullFailedException.#ctor(System.Net.IPEndPoint,System.String)">
+            <summary>
+            Throw a new exception passing the specifics to aid in troubleshooting
+            </summary>
+            <param name="ipEndPoint">IPEndPoint to which the connection attempt was made</param>
+            <param name="message">Message describing the problem</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Exceptions.DataPullFailedException.#ctor(System.Net.IPEndPoint,System.Exception)">
+            <summary>
+            Throw a new exception passing the specifics to aid in troubleshooting
+            </summary>
+            <param name="ipEndPoint">IPEndPoint to which the connection attempt was made</param>
+            <param name="innerException">Inner exception raised when trying to connect</param>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Exceptions.ListenerException">
+            <summary>
+            Exception thrown when there are problems with opening the listener
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Exceptions.ListenerException.PortNumber">
+            <summary>
+            The port number at which the listener tried to listen on
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Exceptions.ListenerException.#ctor">
+            <summary>
+            Default constructor because its required for serialization support. Do not use.
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Exceptions.ListenerException.#ctor(System.Int32,System.String)">
+            <summary>
+            Throw a new exception passing the specifics to aid in troubleshooting
+            </summary>
+            <param name="portNumber">Portnumber at which the listener tried to listen</param>
+            <param name="message">Message describing the problem</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Exceptions.ListenerException.#ctor(System.Int32,System.Exception)">
+            <summary>
+            Throw a new exception passing the specifics to aid in troubleshooting
+            </summary>
+            <param name="portNumber">Portnumber at which the listener tried to listen</param>
+            <param name="innerException">Inner exception raised when trying to connect</param>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Listener">
+            <summary>
+            One listener listening for incoming data from an Omnik Solar Inverter
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Listener.DefaultDataBufferLength">
+            <summary>
+            The default data buffer size to use to retrieve data
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Listener.PortNumber">
+            <summary>
+            Gets the TCP port number at which this listener listens for Omnik data transmissions
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Listener.IsListening">
+            <summary>
+            Gets a boolean indicating if the listener is currently listening for incoming data
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Listener.Name">
+            <summary>
+            Gets the name assigned to this listener
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Listener.tcpListener">
+            <summary>
+            The TcpListener instance used to receive data from the Omnik
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Listener.connectedClients">
+            <summary>
+            List with all connected clients
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Listener.ListeningHandler">
+            <summary>
+            Signature for listener ready
+            </summary>
+            <param name="listener">Listener instance that is ready and listening for incoming data</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Listener.Listening">
+            <summary>
+            Triggered when a listener is ready and listening
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Listener.DataReceivedHandler">
+            <summary>
+            Signature for the received data
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="client">The client instance on which the data has been received</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Listener.DataReceived">
+            <summary>
+            Triggered when data is received from a client
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Listener.ClientConnectedHandler">
+            <summary>
+            Signature for a connecting client
+            </summary>
+            <param name="client">Client instance representing the client that connects</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Listener.ClientConnected">
+            <summary>
+            Triggered when a client connects
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Listener.ClientDisconnectedHandler">
+            <summary>
+            Signature for a disconnecting client
+            </summary>
+            <param name="clientEndPoint">EndPoint of the client that disconnected</param>
+            <param name="listener">The Listener from which the client has disconnected</param>
+        </member>
+        <member name="E:KoenZomers.Omnik.Api.Listener.ClientDisconnected">
+            <summary>
+            Triggered when a client disconnects
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.#ctor(System.Int32,System.String)">
+            <summary>
+            Initializes a new Omnik Listener instance with the provided name on the provided port number
+            </summary>
+            <param name="portNumber">Number of the TCP port to listen on for incoming Omnik data</param>
+            <param name="name">Name to assign to this listener</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.#ctor(System.Int32)">
+            <summary>
+            Initializes a new Omnik Listener instance on the provided port number
+            </summary>
+            <param name="portNumber">Number of the TCP port to listen on for incoming Omnik data</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.Start">
+            <summary>
+            Opens the TCP port to start listening for incoming data transmissions from an Omnik device
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.HandleClientConnecting(System.IAsyncResult)">
+            <summary>
+            Triggered when a client connects
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.HandleReceivedData(System.Byte[],KoenZomers.Omnik.Api.ConnectedClient)">
+            <summary>
+            Triggered when data is received from a connected client
+            </summary>
+            <param name="receivedData">Byte array with the received data</param>
+            <param name="client">The client instance on which the data has been received</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.ClientHasDisconnected(KoenZomers.Omnik.Api.ConnectedClient)">
+            <summary>
+            Triggered when a client has disconnected
+            </summary>
+            <param name="client">Client instance that has disconnected</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.Stop">
+            <summary>
+            Stops listening
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Listener.System#IDisposable#Dispose">
+            <summary>
+            Closes the connection and cleans up used resources
+            </summary>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Logging.Logdata">
+            <summary>
+            Class which takes care of logging data to the configured Trace Writers
+            </summary>
+        </member>
+        <member name="F:KoenZomers.Omnik.Api.Logging.Logdata.LogCategory">
+            <summary>
+            Name to use to identify messages logged by this class
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Logging.Logdata.LogMessage(System.Diagnostics.TraceLevel,System.String)">
+            <summary>
+            Logs the message if the application is configured to log messages of the provided level
+            </summary>
+            <param name="level">Logging level this message concerns</param>
+            <param name="message">Message to be logged</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Logging.Logdata.AlwaysLogMessage(System.Diagnostics.TraceLevel,System.String)">
+            <summary>
+            Always logs the message, regardless of the configured level to log
+            </summary>
+            <param name="level">Logging level this message concerns</param>
+            <param name="message">Message to be logged</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Logging.Logdata.ShouldThisMessageBeLogged(System.Diagnostics.TraceLevel)">
+            <summary>
+            Returns a boolean indicating if a message in the provided category for the provided logging level should be logged based on the logging configuration of this application
+            </summary>
+            <param name="level">Level in which a message is to be logged</param>
+            <returns>True if the message should be logged, false if not</returns>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Statistics">
+            <summary>
+            Contains one set of statistics based on data provided by the Omnik
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.RawData">
+            <summary>
+            Gets the raw data as received from the Omnik
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.WifiModuleSerialNumber">
+            <summary>
+            Gets the serial number of the wifi module
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.InverterSerialNumber">
+            <summary>
+            Gets the serial number of the inverter
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.MainFirmwareVersion">
+            <summary>
+            Gets the main firmware version of the inverter
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.SlaveFirmwareVersion">
+            <summary>
+            Gets the slave firmware version of the inverter
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.Temperature">
+            <summary>
+            Gets the temperature
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.HoursActive">
+            <summary>
+            Gets the amount of hours the Omnik is active already since its last reset
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.ProductionCurrent1">
+            <summary>
+            Gets the current electricity production in Watts on channel 1
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.ProductionCurrent2">
+            <summary>
+            Gets the current electricity production in Watts on channel 2
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.ProductionCurrent3">
+            <summary>
+            Gets the current electricity production in Watts on channel 3
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.ProductionToday">
+            <summary>
+            Gets the electricity production of today in kWh
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.ProductionTotal">
+            <summary>
+            Gets the electricity production all time in kWh
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.PVVoltageDC1">
+            <summary>
+            Gets the voltage on channel 1 at the solar panel side (PV Voltage DC 1)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.PVVoltageDC2">
+            <summary>
+            Gets the voltage on channel 2 at the solar panel side (PV Voltage DC 2)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.PVVoltageDC3">
+            <summary>
+            Gets the voltage on channel 3 at the solar panel side (PV Voltage DC 3)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.IVAmpsDC1">
+            <summary>
+            Gets the amperage on channel 1 at the solar panel side (IV Voltage DC 1)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.IVAmpsDC2">
+            <summary>
+            Gets the amperage on channel 2 at the solar panel side (IV Voltage DC 2)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.IVAmpsDC3">
+            <summary>
+            Gets the amperage on channel 3 at the solar panel side (IV Voltage DC 3)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.PVVoltageAC1">
+            <summary>
+            Gets the voltage on channel 1 at the electricity network side (PV Voltage AC 1)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.PVVoltageAC2">
+            <summary>
+            Gets the voltage on channel 2 at the electricity network side (PV Voltage AC 2)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.PVVoltageAC3">
+            <summary>
+            Gets the voltage on channel 3 at the electricity network side (PV Voltage AC 3)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.IVAmpsAC1">
+            <summary>
+            Gets the amperage on channel 1 at the electricity network side (IV Voltage AC 1)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.IVAmpsAC2">
+            <summary>
+            Gets the amperage on channel 2 at the electricity network side (IV Voltage AC 2)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.IVAmpsAC3">
+            <summary>
+            Gets the amperage on channel 3 at the electricity network side (IV Voltage AC 3)
+            </summary>
+        </member>
+        <member name="P:KoenZomers.Omnik.Api.Statistics.FrequencyAC">
+            <summary>
+            Gets the frequency of the electricity in kHz on the AC side
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.#ctor(System.Byte[])">
+            <summary>
+            Parses the provided Omnik data into statistics
+            </summary>
+            <param name="omnikData">The byte array with data from the Omnik device</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.ParseOmnikData(System.Byte[])">
+            <summary>
+            Parses the provided byte array with data retreived from the Omnik and puts it into this instance
+            </summary>
+            <param name="omnikData">Raw data as received from the Omnik</param>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetTemperatureFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the temperature of the Omnik device from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>Current temperature of the Omnik</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetCurrentElectricityProduction1FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the current electricity production of the Omnik device on channel 1 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>Current electricity production of the Omnik on channel 1 in Watts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetWifiModuleSerialNumberFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the serial number of the wifi module from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>Serial number of the Omnik wifi module</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetInverterSerialNumberFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the serial number of the inverter from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>Serial number of the Omnik inverter</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetMainFirmwareVersionFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the main firmware version of the inverter from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>Main firmware version of the Omnik inverter</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetSlaveFirmwareVersionFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the slave firmware version of the inverter from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>Slave firmware version of the Omnik inverter</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetElectricityProductionTodayFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets todays electricity production from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The electricity production of today in kWh</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetElectricityProductionTotalFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the electricity production since using it from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The electricity production in total since using it in kWh</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetHoursActiveSinceLastResetFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the amount of hours the Omnik has been active since its last reset from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The amount of hours the Omnik has been active for since its last reset</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetPVVoltageDC1FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the PV Voltage DC1 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The PV Voltage DC1 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetPVVoltageDC2FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the PV Voltage DC2 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The PV Voltage DC2 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetPVVoltageDC3FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the PV Voltage DC3 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The PV Voltage DC3 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetIVAmpsDC1FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the IV Amps DC 1 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The IV Amps DC 1 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetIVAmpsDC2FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the IV Amps DC 2 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The IV Amps DC 2 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetIVAmpsDC3FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the IV Amps DC 3 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The IV Amps DC 3 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetPVVoltageAC1FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the PV Voltage AC 1 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The PV Voltage AC 1 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetPVVoltageAC2FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the PV Voltage AC 2 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The PV Voltage AC 2 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetPVVoltageAC3FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the PV Voltage AC 3 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The PV Voltage AC 3 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetIVAmpsAC1FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the IV Amps AC 1 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The IV Amps AC 1 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetIVAmpsAC2FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the IV Amps AC 2 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The IV Amps AC 2 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetIVAmpsAC3FromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the IV Amps AC 3 from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The IV Amps AC 3 in volts</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Statistics.GetFequencyACFromRawOmnikData(System.Byte[])">
+            <summary>
+            Gets the Frequency AC from the raw Omnik data
+            </summary>
+            <param name="omnikData">Raw Omnik data</param>
+            <returns>The frequency of the electiricy at the AC side in Hz</returns>
+        </member>
+        <member name="T:KoenZomers.Omnik.Api.Utils">
+            <summary>
+            Contains utilities for handling the data in this project
+            </summary>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Utils.ConvertDecimalToHex(System.Int32)">
+            <summary>
+            Converts a decimal value to its hexadecimal representation
+            </summary>
+            <param name="value">Decimal number</param>
+            <returns>Hexidecimal equivallent of the decimal number</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Utils.ConvertStringToHex(System.String)">
+            <summary>
+            Converts a string value with decimal numbers to its hexadecimal representation
+            </summary>
+            <param name="value">String containing decimal numbers</param>
+            <returns>Hexadecimal equivallent string of the decimal numbers</returns>
+        </member>
+        <member name="M:KoenZomers.Omnik.Api.Utils.ConvertHexStringToByteArray(System.String)">
+            <summary>
+            Converts a hexidecimal string to its byte array equivallent
+            </summary>
+            <param name="hex">Hexadecimal string</param>
+            <returns>Byte Array</returns>
+        </member>
+    </members>
+</doc>
