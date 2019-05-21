@@ -63,6 +63,10 @@ The WiFi Serial Number you can retrieve by keep pushing the white button on the 
 
 ## Version History
 
+Version 1.0.3.1 - May 21, 2019
+
+- Also added support for .NET Standard 2.0
+
 Version 1.0.3.0 - May 6, 2019
 
 - Converted to a multi targeted framework making it available to .NET Framework 4.5.2 and .NET Framework 4.7.2
