@@ -363,11 +363,6 @@
             Retrieve data from the Omnik
             </summary>
         </member>
-        <member name="M:KoenZomers.Omnik.Api.DataPullSession.HandlePullClientConnected(System.IAsyncResult)">
-            <summary>
-            Handles a pull client being connected to an Omnik
-            </summary>
-        </member>
         <member name="M:KoenZomers.Omnik.Api.DataPullSession.SendDataPullMessage(System.Net.Sockets.TcpClient)">
             <summary>
             Constructs the message to send to the Omnik to request data and sends it

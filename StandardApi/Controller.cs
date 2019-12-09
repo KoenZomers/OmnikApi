@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace KoenZomers.Omnik.Api
 {
@@ -167,13 +168,13 @@ namespace KoenZomers.Omnik.Api
         /// <param name="omnikAddress">IP Address or DNS name of the Omnik Solar Inverter to connect to</param>
         /// <param name="omnikPort">Port number of the Omnik Solar Inverter to connect on</param>
         /// <param name="serialNumber">Serial number of the Omnik Solar Inverter to which the connection will be made</param>
-        public void PullData(string omnikAddress, string serialNumber, int omnikPort = DefaultOmnikPortNumber)
+        public async Task PullData(string omnikAddress, string serialNumber, int omnikPort = DefaultOmnikPortNumber)
         {
             // Create a new data pull session and initiate it
             var dataPullSession = new DataPullSession(omnikAddress, omnikPort, serialNumber);
             dataPullSession.DataReceived += HandlePullSessionDataReceived;
             dataPullSession.DataPullSessionFailed += HandleDataPullSessionFailed;
-            dataPullSession.RetrieveData();               
+            await dataPullSession.RetrieveData();               
         }
 
         #endregion
@@ -189,10 +190,7 @@ namespace KoenZomers.Omnik.Api
         /// <param name="reason">Reason why the connection failed</param>
         private void HandleDataPullSessionFailed(string omnikAddress, int omnikPort, string serialNumber, string reason)
         {
-            if (DataPullSessionFailed != null)
-            {
-                DataPullSessionFailed(omnikAddress, omnikPort, serialNumber, reason);
-            }
+            DataPullSessionFailed?.Invoke(omnikAddress, omnikPort, serialNumber, reason);
         }
 
         /// <summary>
@@ -203,10 +201,7 @@ namespace KoenZomers.Omnik.Api
         private void HandlePullSessionDataReceived(byte[] receivedData, DataPullSession session)
         {
             // Check if there are subscribers for the raw Omnik data and signal them
-            if (RawPullDataReceived != null)
-            {
-                RawPullDataReceived(receivedData, session);
-            }
+            RawPullDataReceived?.Invoke(receivedData, session);
 
             // Check if there are subscribers to the completed data pull sessions and signal them. Allow for some variations in the received data length due to different firmware versions using different transmission lengths.
             if (OmnikStatisticsAvailable != null && receivedData.Length >= 130)
@@ -225,10 +220,7 @@ namespace KoenZomers.Omnik.Api
         private void HandlePushSessionDataReceived(byte[] receivedData, ConnectedClient client)
         {
             // Check if there are subscribers for the raw Omnik data and signal them
-            if (RawPushDataReceived != null)
-            {
-                RawPushDataReceived(receivedData, client);
-            }
+            RawPushDataReceived?.Invoke(receivedData, client);
 
             // Check if there are subscribers for the parsed Omnik statistics and that the received data is the expected 139 bytes and signal them
             if (OmnikStatisticsAvailable != null && receivedData.Length == 139)
@@ -258,10 +250,7 @@ namespace KoenZomers.Omnik.Api
         /// <param name="client">Client instance representing the client that connects</param>
         private void HandleClientConnected(ConnectedClient client)
         {
-            if(ClientConnected != null)
-            {
-                ClientConnected(client);
-            }
+            ClientConnected?.Invoke(client);
         }
 
         /// <summary>
@@ -272,10 +261,7 @@ namespace KoenZomers.Omnik.Api
         /// <param name="client">The client instance on which the data has been received</param>/// 
         private void HandleListening(Listener listener)
         {
-            if(Listening != null)
-            {
-                Listening(listener);
-            }
+            Listening?.Invoke(listener);
         }
 
         #endregion

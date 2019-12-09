@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace KoenZomers.Omnik.Api
 {
@@ -101,42 +101,34 @@ namespace KoenZomers.Omnik.Api
         /// <summary>
         /// Retrieve data from the Omnik
         /// </summary>
-        public void RetrieveData()
+        public async Task RetrieveData()
         {
-            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format("Connecting to Omnik at {0}:{1} with serialnumber {2} to pull data", OmnikAddress, OmnikPort, WifiSerialNumber));
+            Logging.Logdata.LogMessage(TraceLevel.Verbose, string.Format($"Connecting to Omnik at {OmnikAddress}:{OmnikPort} with serialnumber {WifiSerialNumber} to pull data"));
 
             // Initiate the connection to the Omnik asynchronously
             TcpClient = new TcpClient(AddressFamily.InterNetwork);
-            TcpClient.BeginConnect(OmnikAddress, OmnikPort, HandlePullClientConnected, TcpClient);
-        }
 
-        #endregion
-
-        #region Private methods
-
-        /// <summary>
-        /// Handles a pull client being connected to an Omnik
-        /// </summary>
-        private void HandlePullClientConnected(IAsyncResult ar)
-        {
-            var tcpClient = (TcpClient)ar.AsyncState;
-            
-            if (!tcpClient.Connected)
+            try
             {
-                var errorMessage = string.Format("Unable to connect to Omnik at {0}:{1} with serialnumber {2} to pull data", OmnikAddress, OmnikPort, WifiSerialNumber);
+                await TcpClient.ConnectAsync(OmnikAddress, OmnikPort);
+            }
+            catch (Exception exception)
+            {
+                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format($"Error while waiting for reply from Omnik at {OmnikAddress}:{OmnikPort} with serialnumber {WifiSerialNumber} in response to the initial statistics request. Exception: { exception.Message}. StackTrace: {exception.StackTrace}."));
+                throw;
+            }
+
+            if (!TcpClient.Connected)
+            {
+                var errorMessage = string.Format($"Unable to connect to Omnik at {OmnikAddress}:{OmnikPort} with serialnumber {WifiSerialNumber} to pull data");
                 Logging.Logdata.LogMessage(TraceLevel.Verbose, errorMessage);
-                
-                if(DataPullSessionFailed != null)
-                {
-                    DataPullSessionFailed(OmnikAddress, OmnikPort, WifiSerialNumber, errorMessage);
-                }
+
+                DataPullSessionFailed?.Invoke(OmnikAddress, OmnikPort, WifiSerialNumber, errorMessage);
                 return;
             }
 
-            tcpClient.EndConnect(ar);
-            
             // Send out the message to the Omnik to request the statistics
-            SendDataPullMessage(tcpClient);
+            SendDataPullMessage(TcpClient);
 
             // Wait for data to be received in response to sending out the data request
             var dataBuffer = new byte[DefaultDataBufferLength];
@@ -146,10 +138,13 @@ namespace KoenZomers.Omnik.Api
             }
             catch (Exception exception)
             {
-                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format("Error while waiting for reply from Omnik at {0}:{1} with serialnumber {2} in response to the initial statistics request. Exception: {3}. StackTrace: {4}.", OmnikAddress, OmnikPort, WifiSerialNumber, exception.Message, exception.StackTrace));
+                Logging.Logdata.LogMessage(TraceLevel.Warning, string.Format($"Error while waiting for reply from Omnik at {OmnikAddress}:{OmnikPort} with serialnumber {WifiSerialNumber} in response to the initial statistics request. Exception: { exception.Message}. StackTrace: {exception.StackTrace}."));
             }
-            
         }
+
+        #endregion
+
+        #region Private methods
 
         /// <summary>
         /// Constructs the message to send to the Omnik to request data and sends it
